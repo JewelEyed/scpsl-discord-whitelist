@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Northwood.LabAPI" Version="1.1.7" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SL_REFERENCES)' != ''">
+    <Reference Include="Assembly-CSharp" HintPath="$(SL_REFERENCES)/Assembly-CSharp.dll" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(SL_REFERENCES)/Assembly-CSharp-firstpass.dll" />
+    <Reference Include="CommandSystem.Core" HintPath="$(SL_REFERENCES)/CommandSystem.Core.dll" />
+    <Reference Include="Mirror" HintPath="$(SL_REFERENCES)/Mirror.dll" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)/UnityEngine.CoreModule.dll" />
+  </ItemGroup>
+
+  <Target Name="PublishAndEmbedBot" BeforeTargets="PrepareForBuild">
+    <MSBuild Projects="../ScpSlWhitelist.Bot/ScpSlWhitelist.Bot.csproj" Targets="Restore"
+             Properties="Configuration=$(Configuration)" />
+    <MSBuild Projects="../ScpSlWhitelist.Bot/ScpSlWhitelist.Bot.csproj" Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=linux-x64;SelfContained=true;PublishSingleFile=true;PublishDir=../ScpSlWhitelist/BotPublish/linux/" />
+    <MSBuild Projects="../ScpSlWhitelist.Bot/ScpSlWhitelist.Bot.csproj" Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;PublishDir=../ScpSlWhitelist/BotPublish/win/" />
+    <ItemGroup>
+      <BotLinux Include="BotPublish/linux/ScpSlWhitelist.Bot" />
+      <BotWindows Include="BotPublish/win/ScpSlWhitelist.Bot.exe" />
+      <EmbeddedResource Include="@(BotLinux)" LogicalName="bot/linux/ScpSlWhitelist.Bot" />
+      <EmbeddedResource Include="@(BotWindows)" LogicalName="bot/win/ScpSlWhitelist.Bot.exe" />
+    </ItemGroup>
+  </Target>
+
+</Project>

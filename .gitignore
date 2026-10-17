@@ -1,0 +1,22 @@
+# Build
+bin/
+obj/
+BotPublish/
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+*.rsuser
+.zed
+
+whitelist.txt
+whitelist.txt.claims
+whitelist.txt.tmp
+whitelist.txt.claims.tmp
+
+ScpSlWhitelist.yaml
+
+.DS_Store
+Thumbs.db
